@@ -1,5 +1,8 @@
 /* this creates the city scene */
 
+// initialize the scene's width
+let SCENE_W = 9000;
+
 // initialize variables for the buildings in the city scene
 let bldgs;
 let xbldg = 100;
@@ -17,10 +20,10 @@ function loadBldgs() {
 	bldgs = new Group(); 
 
 	// load all of the buildings with a loop to simplify code
-	for(var i = 0; i < 10; i++) {
+	while (xbldg < SCENE_W - 400) {
 		// randomly choose a building to generate for a single iteration
 		// truncate the float that's returned
-		let randomBldg = Math.trunc(random(1, 6));
+		randomBldg = Math.trunc(random(1, 6));
 
 		/* because some buildings are smaller and their placements are
 		determined by the center of the picture, I've set them to have

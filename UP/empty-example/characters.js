@@ -23,10 +23,3 @@ function loadCharacters() {
 	with other sprites */
 	carlSprite.setDefaultCollider();
 }
-
-function loadGround() {
-	/* make an invisible platform under Carl to keep him from falling
-	forever */
-	ground = createSprite(w/4, h * 3/4, 50, 2);
-	ground.shapeColor = color(255); // make it invisible
-}
