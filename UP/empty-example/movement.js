@@ -1,33 +1,43 @@
 // forces
 let GRAVITY = 1;
 let JUMP = 15;
+let RISE = ;
 
-let diffX; // initialize a variable that will check the distance b/w the camera's x value and Carl's x value
+let checkLiftOff = false;
 
-function loadGround() {
-	/* make an invisible platform under Carl to keep him from falling
-	forever with gravity*/
-	ground = createSprite(w/4, h * 4/5, 50, 2);
-	ground.shapeColor = color(255); // make it invisible
+// house lift off
+function liftOff() {
+	if (carlSprite.overlap(houseSprite)) { // check if Carl overlaps with the house
+		carlSprite.changeAnimation('standing'); // change the animation so he's standing still
+		// carlSprite.position.x = SCENE_W;
+		// carlSprite.position.x = houseSprite.position.x;
+		// carlSprite.position.y = houseSprite.position.y;
+		houseSprite.velocity.y = -RISE;
+		carlSprite.velocity.y = -RISE;
+		GRAVITY = 0;
+		checkLiftOff = true;
+	}
 }
 
-// functions
-//// Carl does things and interacts with game space based on player input
+// Carl does things and interacts with game space based on player input
 function carlMovement() {
 	gravity(); // forces on Carl
 	controls(); // basic movements (left, right, stand)
 }
 
-//// character actions with input
+// character actions with input
 function controls() {
-	walk(); // move left and right
-	jump(); // jump
+	if (!checkLiftOff) {
+		walk(); // move left and right
+		jump(); // jump
+	}
 }
 
-////// movement
+//// movement
 function movement() {
 	// camera follows Carl--but only as he moves along the x-axis
 	camera.position.x = carlSprite.position.x;
+
 
 	// keep the ground underneath him at all times
 	ground.position.x = carlSprite.position.x;
@@ -42,7 +52,7 @@ function movement() {
 	}
 }
 
-////// walking
+//// walking
 function walk() {
 	movement();
 
@@ -81,7 +91,7 @@ function walk() {
 	// }
 }
 
-////// jumping
+//// jumping
 function jump() {
 	// Carl gets ready to jump when the up arrow is pressed
 	if (keyDown(UP_ARROW)) {
@@ -96,7 +106,7 @@ function jump() {
 	}
 }
 
-//// forces on character
+// forces on character
 function gravity() { // so Carl comes back down after jumping
 	carlSprite.velocity.y += GRAVITY;
 

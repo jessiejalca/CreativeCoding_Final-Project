@@ -5,9 +5,6 @@ and drawn later in draw() */
 let carl;
 let carlSprite;
 
-// environment
-let ground;
-
 function loadCharacters() {
 	// loading Carl; different animations are being set for different occasions
 	carl = loadAnimation('assets/carl-walking001.png', 'assets/carl-walking002.png');
@@ -21,5 +18,5 @@ function loadCharacters() {
 
 	/* set Carl up with a perimeter for detecting collisions
 	with other sprites */
-	carlSprite.setDefaultCollider();
+	// carlSprite.setDefaultCollider();
 }
