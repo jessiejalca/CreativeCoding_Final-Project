@@ -29,6 +29,7 @@ function loadCarl() {
 	// carlSprite.setDefaultCollider();
 }
 
+// CHAPTER 1
 function loadRetirementWorker() {
 	rwAnimation = loadAnimation('assets/retirement-home-dude_001.png', 'assets/retirement-home-dude_002.png');
 	rwSprite = createSprite(0, h * 2/3 - 15);

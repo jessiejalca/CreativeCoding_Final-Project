@@ -8,6 +8,7 @@ let checkLiftOff = false;
 let jumpCounter = 0;
 
 ///////////////////////////// ANIMATION MOVEMENT ////////////////////////////////////////
+// this section consists of movement not controlled by the user
 // house lift off
 function liftOff() {
 	if (carlSprite.overlap(houseSprite)) { // check if Carl overlaps with the house
@@ -20,15 +21,20 @@ function liftOff() {
 	}
 }
 
-//
+// retirement home worker chases after Carl
 function rwMovement() {
 	if (rwSprite.position.x < SCENE_W) {
-		rwSprite.velocity.x = 3;
-	} else {
+		rwSprite.velocity.x = 4.5;
+	} else { // he stops when the he reaches the end of the scene
 		rwSprite.velocity.x = 0;
 	}
-	
-	enemyCollision();
+}
+
+function commuterMovement() {
+	for (var i = 0; i < commuters.length; i++) {
+		var c = commuters[i];
+		c.velocity.x = -3;
+	}
 }
 
 /////////////////////////////////// CARL MOVEMENT ////////////////////////////////////////
@@ -138,8 +144,15 @@ function gravity() { // so Carl comes back down after jumping
 }
 
 function enemyCollision() {
+	// if the retirement home worker catches Carl, the chapter starts
+	// again at the beginning
 	if (carlSprite.overlap(rwSprite)) {
 		carlSprite.position.x = w/4;
 		rwSprite.position.x = 0;
 	}
+
+	// Carl has to jump over these objects
+	carlSprite.collide(fireHydrants);
+	carlSprite.collide(benches);
+	commuters.displace(carlSprite);
 }

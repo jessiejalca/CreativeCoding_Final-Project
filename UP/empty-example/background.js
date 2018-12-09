@@ -38,8 +38,9 @@ function loadHouse() {
 	houseSprite.scale = 0.5;
 }
 
+// CHAPTER 1
 function loadBldgs() {
-	// set up buildings for the city scene (Chapter 2)
+	// set up buildings for the city scene
 
 	// group the buildings together into a special sprites array
 	bldgs = new Group(); 
