@@ -1,24 +1,37 @@
 // forces
 let GRAVITY = 1;
 let JUMP = 15;
-let RISE = ;
+let RISE = 2;
 
 let checkLiftOff = false;
 
+let jumpCounter = 0;
+
+///////////////////////////// ANIMATION MOVEMENT ////////////////////////////////////////
 // house lift off
 function liftOff() {
 	if (carlSprite.overlap(houseSprite)) { // check if Carl overlaps with the house
 		carlSprite.changeAnimation('standing'); // change the animation so he's standing still
-		// carlSprite.position.x = SCENE_W;
-		// carlSprite.position.x = houseSprite.position.x;
-		// carlSprite.position.y = houseSprite.position.y;
+		carlSprite.position.x = houseSprite.position.x ;
+		carlSprite.position.y = houseSprite.position.y + 350;
 		houseSprite.velocity.y = -RISE;
-		carlSprite.velocity.y = -RISE;
 		GRAVITY = 0;
 		checkLiftOff = true;
 	}
 }
 
+//
+function rwMovement() {
+	if (rwSprite.position.x < SCENE_W) {
+		rwSprite.velocity.x = 3;
+	} else {
+		rwSprite.velocity.x = 0;
+	}
+	
+	enemyCollision();
+}
+
+/////////////////////////////////// CARL MOVEMENT ////////////////////////////////////////
 // Carl does things and interacts with game space based on player input
 function carlMovement() {
 	gravity(); // forces on Carl
@@ -40,7 +53,7 @@ function movement() {
 
 
 	// keep the ground underneath him at all times
-	ground.position.x = carlSprite.position.x;
+	// ground.position.x = carlSprite.position.x;
 
 	// constrain Carl's movements
 	if (carlSprite.position.x < w/3) { // on the left
@@ -101,8 +114,15 @@ function jump() {
 	}
 
 	// Carl jumps when the user releases the up arrow
-	if (keyWentUp(UP_ARROW)) {
+	// limit how high he can jump (he can jump twice in one jump at most)
+	if (keyWentUp(UP_ARROW) && jumpCounter < 1) {
 		carlSprite.velocity.y = -JUMP;
+		jumpCounter ++;
+	}
+	// reset jump counter when he reaches the ground
+	if (carlSprite.collide(ground)) {
+		// carlSprite.changeAnimation('standing');
+		jumpCounter = 0;
 	}
 }
 
@@ -114,5 +134,12 @@ function gravity() { // so Carl comes back down after jumping
 	when they reach the ground */
 	if (carlSprite.collide(ground)) {
 		carlSprite.velocity.y = 0;
+	}
+}
+
+function enemyCollision() {
+	if (carlSprite.overlap(rwSprite)) {
+		carlSprite.position.x = w/4;
+		rwSprite.position.x = 0;
 	}
 }
