@@ -7,6 +7,9 @@ let h = 500;
 // initialize the scene's width
 let SCENE_W = 15000;
 
+let ch1 = true;
+let ch2 = false;
+
 function setup() {
 	createCanvas(w, h);
 	loadBG(); // load all of the backgrounds
@@ -18,39 +21,39 @@ function setup() {
 function draw() {
 	background(255);
 
+	// generic movement
 	liftOff();
 	carlMovement();
-	rwMovement();
-	commuterMovement();
+	companions();
 	enemyCollision();
+
+	// chapter-specific movement
+	movementCh1();
 	
 	// draw the background first
 	/* drawing things one by one will be important for when 
 	there are more backgrounds for different chapters. it's
 	also good for layering everything correctly */
-	drawBG();
-	drawObstacles();
-	drawCharacters();
+
+	if (ch1) {
+		drawCh1();
+	}
+	
 	drawSprite(ground);
 }
 
-function drawObstacles() {
-	// CHAPTER 1
+function drawCh1() {
+	drawSprite(houseSprite);
+	drawSprites(bldgs);
+	drawSprite(carlSprite);
+	drawSprite(russellSprite);
+	drawSprite(rwSprite);
 	drawSprites(fireHydrants);
 	drawSprites(benches);
 	drawSprites(commuters);
 }
 
-function drawBG() {
-	drawSprite(houseSprite);
-
-	// CHAPTER 1
-	drawSprites(bldgs);
-}
-
-function drawCharacters() {
-	drawSprite(carlSprite);
-
-	// CHAPTER 1
-	drawSprite(rwSprite);
+function movementCh1() {
+	rwMovement();
+	commuterMovement();
 }

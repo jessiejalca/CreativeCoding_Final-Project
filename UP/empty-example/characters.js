@@ -5,12 +5,16 @@ and drawn later in draw() */
 let carl;
 let carlSprite;
 
+let russellAnimation;
+let russellSprite;
+
 let rwSprite;
 let rwAnimation;
 
 function loadCharacters() {
 	loadCarl();
 	loadRetirementWorker();
+	loadRussell();
 }
 
 function loadCarl() {
@@ -29,11 +33,21 @@ function loadCarl() {
 	// carlSprite.setDefaultCollider();
 }
 
+function loadRussell() {
+	russellAnimation = loadAnimation('assets/russell-walking001.png', 'assets/russell-walking002.png');
+	russellSprite = createSprite(SCENE_W/2, h * 2/3 + 10);
+	russellSprite.addAnimation('walking', russellAnimation);
+	russellSprite.addAnimation('standing', 'assets/russell-front.png');
+	russellSprite.scale = 0.04;
+
+	russellSprite.changeAnimation('standing');
+}
+
 // CHAPTER 1
 function loadRetirementWorker() {
 	rwAnimation = loadAnimation('assets/retirement-home-dude_001.png', 'assets/retirement-home-dude_002.png');
 	rwSprite = createSprite(0, h * 2/3 - 15);
 	rwSprite.addAnimation('walking', rwAnimation);
-
+	rwSprite.addAnimation('standing', 'assets/retirement-home-dude_003.png');
 	rwSprite.scale = 0.05;
 }

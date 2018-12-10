@@ -63,10 +63,6 @@ function loadBldgs() {
 		}
 
 		// load the buildings into the bldgs group
-		/* side note: scaling the buildings doesn't work because the
-		group feature doesn't implement the method like a single sprite
-		does, so instead I had to resize the images on Photoshop rather 
-		than scale them like I did with Carl*/
 		let newBldgSprite = createSprite(xbldg, ybldg);
 		let newBldgImage = loadImage('assets/bldg00'+randomBldg+'.png');
 		newBldgSprite.addImage(newBldgImage);

@@ -7,7 +7,9 @@ let checkLiftOff = false;
 
 let jumpCounter = 0;
 
-///////////////////////////// ANIMATION MOVEMENT ////////////////////////////////////////
+let followCarl = false;
+
+///////////////////////////// ANIMATION MOVEMENT /////////////////////////////////////
 // this section consists of movement not controlled by the user
 // house lift off
 function liftOff() {
@@ -18,38 +20,47 @@ function liftOff() {
 		houseSprite.velocity.y = -RISE;
 		GRAVITY = 0;
 		checkLiftOff = true;
+
+		followCarl = false;
+		russellSprite.changeAnimation('standing');
+		russellSprite.position.y = carlSprite.position.y;
+		russellSprite.position.x = carlSprite.position.x - 60;
 	}
 }
 
 // retirement home worker chases after Carl
 function rwMovement() {
 	if (rwSprite.position.x < SCENE_W) {
-		rwSprite.velocity.x = 4.5;
+		rwSprite.changeAnimation('walking');
+		rwSprite.velocity.x = 4;
 	} else { // he stops when the he reaches the end of the scene
+		rwSprite.changeAnimation('standing');
 		rwSprite.velocity.x = 0;
+		setTimeout(startCh2, 3000);
 	}
 }
 
 function commuterMovement() {
 	for (var i = 0; i < commuters.length; i++) {
 		var c = commuters[i];
-		c.velocity.x = -3;
+		c.velocity.x = -2;
 	}
 }
 
-/////////////////////////////////// CARL MOVEMENT ////////////////////////////////////////
+/////////////////////////////////// CARL MOVEMENT ////////////////////////////////////
 // Carl does things and interacts with game space based on player input
 function carlMovement() {
 	gravity(); // forces on Carl
-	controls(); // basic movements (left, right, stand)
+	movement();
+
+	if (!checkLiftOff) {
+		controls(); // user controls (jump, hit)
+	}
 }
 
 // character actions with input
 function controls() {
-	if (!checkLiftOff) {
-		walk(); // move left and right
-		jump(); // jump
-	}
+	jump();
 }
 
 //// movement
@@ -57,77 +68,20 @@ function movement() {
 	// camera follows Carl--but only as he moves along the x-axis
 	camera.position.x = carlSprite.position.x;
 
-
-	// keep the ground underneath him at all times
-	// ground.position.x = carlSprite.position.x;
-
-	// constrain Carl's movements
-	if (carlSprite.position.x < w/3) { // on the left
-		// make Carl stop
-		carlSprite.position.x = w/3;
-	}
-	if (carlSprite.position.x > SCENE_W) {
-		carlSprite.position.x = SCENE_W;
-	}
+	carlSprite.velocity.x = 5;
 }
 
-//// walking
-function walk() {
-	movement();
-
-	// move Carl and friends with left/right arrow keys
-	if (keyDown(LEFT_ARROW)) { // go left with the left arrow key
-		// animation to make Carl look like he's walking
-		carlSprite.changeAnimation('moving');
-
-		// make sure he's facing the right (or I guess in this case, left) direction
-		carlSprite.mirrorX(-1);
-
-		// make him actually move
-		carlSprite.velocity.x = -5;
-
-	} else if (keyDown(RIGHT_ARROW)) { // go right with the right arrow key
-		// animation to make Carl look like he's walking
-		carlSprite.changeAnimation('moving');
-
-		// make sure he's facing the right direction
-		carlSprite.mirrorX(1);
-
-		// make him actually move
-		carlSprite.velocity.x = 5;
-
-	} else { // stop Carl when neither the left nor right keys are being pressed
-		// change animation so he's just standing there
-		// note: it still reflects based on the direction he was last walking in
-		carlSprite.changeAnimation('standing');
-
-		// make him stop moving
-		carlSprite.velocity.x = 0;
-	}
-
-	// if (carlSprite.collide(obstacleSprite)) {
-	// 	carlSprite.velocity.x = 0;
-	// }
-}
 
 //// jumping
 function jump() {
-	// Carl gets ready to jump when the up arrow is pressed
-	if (keyDown(UP_ARROW)) {
-		carlSprite.changeAnimation('get ready to jump');
-		carlSprite.velocity.x = 0;
-		ground.velocity.x = 0;
-	}
-
 	// Carl jumps when the user releases the up arrow
 	// limit how high he can jump (he can jump twice in one jump at most)
-	if (keyWentUp(UP_ARROW) && jumpCounter < 1) {
+	if (keyWentUp('z' || 'Z') && jumpCounter < 1) {
 		carlSprite.velocity.y = -JUMP;
 		jumpCounter ++;
 	}
 	// reset jump counter when he reaches the ground
 	if (carlSprite.collide(ground)) {
-		// carlSprite.changeAnimation('standing');
 		jumpCounter = 0;
 	}
 }
@@ -147,12 +101,40 @@ function enemyCollision() {
 	// if the retirement home worker catches Carl, the chapter starts
 	// again at the beginning
 	if (carlSprite.overlap(rwSprite)) {
-		carlSprite.position.x = w/4;
-		rwSprite.position.x = 0;
+		loadBarriers();
+		reset(carlSprite, w/4, h/2);
+		reset(rwSprite, 0, h * 2/3 - 15);
+		reset(russellSprite, SCENE_W/2, h * 2/3 + 10);
+		russellSprite.changeAnimation('standing');
+		followCarl = false;
 	}
 
 	// Carl has to jump over these objects
-	carlSprite.collide(fireHydrants);
-	carlSprite.collide(benches);
-	commuters.displace(carlSprite);
+	collisions(carlSprite);
+}
+
+function collisions(character) {
+	character.collide(fireHydrants);
+	character.collide(benches);
+	commuters.displace(character); // commuters push back
+}
+
+function companions() {
+	// Russell
+	if (carlSprite.overlap(russellSprite)) {
+		followCarl = true;
+	}
+
+	if (followCarl) {
+		russellSprite.changeAnimation('walking');
+		russellSprite.position.y = carlSprite.position.y;
+		russellSprite.position.x = carlSprite.position.x - 60;
+		collisions(russellSprite);
+	}
+
+	if (carlSprite.velocity.x === 0) {
+		russellSprite.changeAnimation('standing');
+	}
+
+	russellSprite.collide(ground);
 }
