@@ -10,6 +10,9 @@ let yBench = h * 3/4 - 15;
 let commuters;
 let yCommuter = h * 3/4 - 40;
 let commuterRandom;
+////// construction workers
+let cWorkers;
+let yCWorkers = h * 3/4 - 40;
 
 
 // load all the obstacles for all the scenes
@@ -19,7 +22,14 @@ function space() {
 }
 
 function loadBarriers() {
-	////////////////////////////// CHAPTER 1 /////////////////////////////////////
+	// Chapter 1
+	loadFireHydrants();
+	loadBenches();
+	loadCommuters();
+	loadConstructionWorkers();
+}
+
+function loadFireHydrants() {
 	// fire hydrant obstacles
 	fireHydrants = new Group();
 	let fireHydrantImage = loadImage('assets/fire-hydrant.png');
@@ -29,8 +39,9 @@ function loadBarriers() {
 		fireHydrantSprite.scale = 0.025;
 		fireHydrants.add(fireHydrantSprite);
 	}
+}
 
-
+function loadBenches() {
 	// benches obstacles
 	benches = new Group();
 	let benchImage = loadImage('assets/bench.png');
@@ -40,7 +51,9 @@ function loadBarriers() {
 		benchSprite.scale = 0.2;
 		benches.add(benchSprite);
 	}
+}
 
+function loadCommuters() {
 	// commuters
 	commuters = new Group();
 	let commuterAnimF = loadAnimation('assets/commuter-female_001.png', 'assets/commuter-female_002.png');
@@ -55,8 +68,20 @@ function loadBarriers() {
 		} else {
 			commuterSprite.addAnimation('male', commuterAnimM);
 		}
-		
+
 		commuterSprite.scale = 0.075;
 		commuters.add(commuterSprite);
+	}
+}
+
+function loadConstructionWorkers() {
+	cWorkers = new Group();
+	let cwAnimation = loadAnimation('assets/construction-worker001.png');
+	for (var i = 0; i < 10; i++) {
+		cwSprite = createSprite(space(), yCWorkers);
+		cwSprite.addAnimation('standing', cwAnimation);
+		cwSprite.addAnimation('dizzy', 'assets/construction-worker002.png', 'assets/construction-worker003.png');
+		cwSprite.scale = 0.06;
+		cWorkers.add(cwSprite);
 	}
 }

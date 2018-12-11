@@ -13,8 +13,8 @@ let rwAnimation;
 
 function loadCharacters() {
 	loadCarl();
-	loadRetirementWorker();
 	loadRussell();
+	loadRetirementWorker();
 }
 
 function loadCarl() {
@@ -23,14 +23,10 @@ function loadCarl() {
 	carlSprite = createSprite(w/4, h/2); // set his initial position
 	carlSprite.addAnimation('moving', carl);
 	carlSprite.addAnimation('standing', 'assets/carl-front.png');
-	carlSprite.addAnimation('get ready to jump', 'assets/carl-jumping.png');
+	carlSprite.addAnimation('attacking', 'assets/carl-hitting-stuff001.png', 'assets/carl-hitting-stuff002.png');
 
 	// scale Carl so he isn't ginormous
 	carlSprite.scale = 0.075;
-
-	/* set Carl up with a perimeter for detecting collisions
-	with other sprites */
-	// carlSprite.setDefaultCollider();
 }
 
 function loadRussell() {
@@ -43,7 +39,6 @@ function loadRussell() {
 	russellSprite.changeAnimation('standing');
 }
 
-// CHAPTER 1
 function loadRetirementWorker() {
 	rwAnimation = loadAnimation('assets/retirement-home-dude_001.png', 'assets/retirement-home-dude_002.png');
 	rwSprite = createSprite(0, h * 2/3 - 15);

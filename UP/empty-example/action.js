@@ -4,10 +4,12 @@ let JUMP = 15;
 let RISE = 2;
 
 let checkLiftOff = false;
+let attackMode = false;
 
 let jumpCounter = 0;
 
 let followCarl = false;
+let gotRussell = false;
 
 ///////////////////////////// ANIMATION MOVEMENT /////////////////////////////////////
 // this section consists of movement not controlled by the user
@@ -32,11 +34,10 @@ function liftOff() {
 function rwMovement() {
 	if (rwSprite.position.x < SCENE_W) {
 		rwSprite.changeAnimation('walking');
-		rwSprite.velocity.x = 4;
 	} else { // he stops when the he reaches the end of the scene
 		rwSprite.changeAnimation('standing');
 		rwSprite.velocity.x = 0;
-		setTimeout(startCh2, 3000);
+		setTimeout(endScene, 3000);
 	}
 }
 
@@ -58,19 +59,19 @@ function carlMovement() {
 	}
 }
 
-// character actions with input
-function controls() {
-	jump();
-}
-
-//// movement
+// movement
 function movement() {
 	// camera follows Carl--but only as he moves along the x-axis
 	camera.position.x = carlSprite.position.x;
-
-	carlSprite.velocity.x = 5;
+	// Carl moves continuously
 }
 
+
+// character actions with input
+function controls() {
+	jump();
+	attack();
+}
 
 //// jumping
 function jump() {
@@ -86,6 +87,36 @@ function jump() {
 	}
 }
 
+//// attacking
+function attack() {
+	if (keyDown('x' || 'X')) {
+		carlSprite.changeAnimation('attacking');
+		attackMode = true;
+	} else {
+		carlSprite.changeAnimation('moving');
+		attackMode = false;
+	}
+}
+
+//// obstacles
+function collisions(character) {
+	character.collide(fireHydrants);
+	character.collide(benches);
+	commuters.displace(character); // commuters push back
+	character.collide(cWorkers, hit);
+}
+
+function hit(spriteA, spriteB) {
+	if (attackMode) {
+		spriteB.velocity.y = 5;
+		spriteB.rotationSpeed = 5;
+		spriteB.setCollider('circle', 0, 0, 1);
+		spriteB.changeAnimation('dizzy');
+		spriteB.draw();
+	}
+	
+}
+
 // forces on character
 function gravity() { // so Carl comes back down after jumping
 	carlSprite.velocity.y += GRAVITY;
@@ -97,32 +128,12 @@ function gravity() { // so Carl comes back down after jumping
 	}
 }
 
-function enemyCollision() {
-	// if the retirement home worker catches Carl, the chapter starts
-	// again at the beginning
-	if (carlSprite.overlap(rwSprite)) {
-		loadBarriers();
-		reset(carlSprite, w/4, h/2);
-		reset(rwSprite, 0, h * 2/3 - 15);
-		reset(russellSprite, SCENE_W/2, h * 2/3 + 10);
-		russellSprite.changeAnimation('standing');
-		followCarl = false;
-	}
-
-	// Carl has to jump over these objects
-	collisions(carlSprite);
-}
-
-function collisions(character) {
-	character.collide(fireHydrants);
-	character.collide(benches);
-	commuters.displace(character); // commuters push back
-}
-
+// Russell follows Carl
 function companions() {
 	// Russell
 	if (carlSprite.overlap(russellSprite)) {
 		followCarl = true;
+		gotRussell = true;
 	}
 
 	if (followCarl) {
@@ -137,4 +148,36 @@ function companions() {
 	}
 
 	russellSprite.collide(ground);
+}
+
+//////////////////////////////// END GAME ///////////////////////////////////////////////
+// return true to go to game over screen
+function gameOver() {
+	// if the retirement home worker catches Carl, the chapter starts
+	// again at the beginning
+	if (carlSprite.overlap(rwSprite) || 
+		carlSprite.position.y > ground.position.y || 
+		carlSprite.position.x > russellSprite.position.x && !gotRussell) {
+
+		restart();
+		startScreen = true;
+		startGame = false;
+	}
+
+	// Carl has to jump over these objects
+	collisions(carlSprite);
+}
+
+function restart() {
+	loadBarriers();
+	reset(carlSprite, w/4, h/2);
+	reset(rwSprite, 0, h * 2/3 - 15);
+	reset(russellSprite, SCENE_W/2, h * 2/3 + 10);
+	followCarl = false;
+	russellSprite.changeAnimation('standing');
+}
+
+function reset(character, startX, startY) {
+	character.position.x = startX;
+	character.position.y = startY;
 }

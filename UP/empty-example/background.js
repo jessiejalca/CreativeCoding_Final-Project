@@ -22,7 +22,6 @@ function loadGround() {
 }
 
 
-// eventually this function will load all backgrounds throughout the game
 function loadBG() {
 	loadBldgs();
 	loadHouse();
@@ -38,7 +37,6 @@ function loadHouse() {
 	houseSprite.scale = 0.5;
 }
 
-// CHAPTER 1
 function loadBldgs() {
 	// set up buildings for the city scene
 
