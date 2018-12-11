@@ -1,7 +1,7 @@
 // forces
 let GRAVITY = 1;
 let JUMP = 15;
-let RISE = 2;
+let RISE = 1;
 
 let checkLiftOff = false;
 let attackMode = false;
@@ -37,8 +37,12 @@ function rwMovement() {
 	} else { // he stops when the he reaches the end of the scene
 		rwSprite.changeAnimation('standing');
 		rwSprite.velocity.x = 0;
-		setTimeout(endScene, 3000);
+		setTimeout(gameOver, 3000);
 	}
+}
+
+function launchCredits() {
+	playCredits = true;
 }
 
 function commuterMovement() {
@@ -162,6 +166,7 @@ function gameOver() {
 		restart();
 		startScreen = true;
 		startGame = false;
+		themeSong.play();
 	}
 
 	// Carl has to jump over these objects

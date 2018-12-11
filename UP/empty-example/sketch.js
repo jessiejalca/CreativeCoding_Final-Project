@@ -4,10 +4,14 @@
 let w = 1500;
 let h = 500;
 
+let themeSong;
+
 let title = 'UP: Chapter 1';
 let subtitle = '"Public Menace"';
 let start = 'Click anywhere to start.';
 let instructions = 'Use Z to jump and X to whack people.';
+let objectives = "Find Russell and make it to Carl's house before";
+let objectives2 = "getting caught by the retirement home worker.";
 let gameOverTitle = 'GAME OVER';
 let font;
 let startHouse;
@@ -20,7 +24,11 @@ let SCENE_W = 15000;
 
 let startScreen = true;
 let startGame = false;
-let endScene = false;
+
+function preload() {
+	soundFormats('mp3', 'ogg');
+	themeSong = loadSound('assets/up-theme-song.mp3');
+}
 
 function setup() {
 	createCanvas(w, h);
@@ -30,6 +38,10 @@ function setup() {
 	loadGround(); // so Carl doesn't fall off the screen with gravity
 	loadBarriers(); // load all of the obstacles
 	loadCharacters(); // character set up
+	// loadScript();
+	
+	themeSong.playMode('restart');
+	themeSong.play();
 }
 
 function draw() {
@@ -41,16 +53,14 @@ function draw() {
 	} else if (startGame) {
 		camera.on();
 		drawGame();
-		writeScript();
-	}
-
-	if (startGame) {
 		drawSprite(ground);
 		liftOff();
 		carlMovement();
 		companions();
 		gameOver();
 		actionGame();
+		// objectives();
+		// writeScript();
 	}
 }
 
@@ -99,7 +109,7 @@ function drawStart() {
 	fill(255, 200);
 	noStroke();
 	rectMode(CENTER);
-	rect(w/2, h/3 + 50, 500, 300);
+	rect(w/2, h/3 + 50, 500, 400);
 
 	fill(0);
 	textFont(font);
@@ -112,8 +122,12 @@ function drawStart() {
 	text(subtitle, w/2, h/3 + 60)
 
 	textSize(24);
-	text(start, w/2, h/3 + 120);
-	text(instructions, w/2, h/3 + 150);
+	text(objectives, w/2, h/3 + 120);
+	text(objectives2, w/2, h/3 + 150);
+
+	textSize(18);
+	text(start, w/2, h/3 + 200);
+	text(instructions, w/2, h/3 + 230);
 }
 
 function drawGame() {
@@ -131,4 +145,16 @@ function drawGame() {
 function actionGame() {
 	rwMovement();
 	commuterMovement();
+}
+
+function endCredits() {
+	fill(0);
+	textSize(64);
+	textAlign(RIGHT);
+	text('Designer & Developer      Jessie Jalca', SCENE_W - 150, h*(-2));
+	text('Music            "Married Life"', SCENE_W + 150, h*(-3) - 150);
+	text('Composed by       Michael Giacchino', SCENE_W + 150, h*(-3) - 75);
+	text('Performed by      Matthew Chong', SCENE_W + 150, h*(-3));
+	textAlign(CENTER);
+	text("Inspired by Disney's Up", SCENE_W, h*(-4));
 }
