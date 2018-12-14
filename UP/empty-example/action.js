@@ -37,7 +37,7 @@ function rwMovement() {
 	} else { // he stops when the he reaches the end of the scene
 		rwSprite.changeAnimation('standing');
 		rwSprite.velocity.x = 0;
-		setTimeout(gameOver, 3000);
+		// setTimeout(winGame, 3000);
 	}
 }
 
@@ -117,8 +117,7 @@ function hit(spriteA, spriteB) {
 		spriteB.setCollider('circle', 0, 0, 1);
 		spriteB.changeAnimation('dizzy');
 		spriteB.draw();
-	}
-	
+	}	
 }
 
 // forces on character
@@ -172,6 +171,18 @@ function gameOver() {
 	// Carl has to jump over these objects
 	collisions(carlSprite);
 }
+
+// function winGame() {
+// 	if (checkLiftOff) {
+// 		restart();
+// 		startScreen = true;
+// 		startGame = false;
+// 		themeSong.play();
+// 	}
+
+// 	// Carl has to jump over these objects
+// 	collisions(carlSprite);
+// }
 
 function restart() {
 	loadBarriers();
